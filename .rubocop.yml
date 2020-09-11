@@ -1,0 +1,72 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.7.1
+  NewCops: enable
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 25
+  ExcludedMethods: [describe, context, group]
+
+Layout/HashAlignment:
+  EnforcedColonStyle:
+    - table
+    - key
+
+  EnforcedHashRocketStyle:
+    - table
+    - key
+
+Layout/LineLength:
+  Max: 123
+
+Lint/MissingSuper:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/ClassLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - if
+    - unless
+    - for
+
+RSpec/DescribeClass:
+  Exclude:
+    - spec/lib/tasks/**/*.rb
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 4
+
+Style/ExponentialNotation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true

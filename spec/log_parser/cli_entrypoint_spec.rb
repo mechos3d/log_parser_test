@@ -7,7 +7,7 @@ RSpec.describe LogParser::CliEntrypoint do
     described_instance.call
   end
 
-  before { allow(described_instance).to receive(:exit) }
+  before { allow(described_instance).to receive(:exit_with) }
 
   let(:argv) { [] }
   let(:stdout) { double.tap { |dbl| allow(dbl).to receive(:puts) } }

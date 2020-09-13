@@ -3,15 +3,20 @@
 require 'spec_helper'
 
 RSpec.describe LogParser::ParseFile::CollectRawData do
-  subject(:class_call) { described_instance.call }
+  subject(:class_call) { described_class.new(io: io).call }
 
-  let(:described_instance) { described_class.new(io: io) }
+  let(:success_value) { class_call[0] }
+  let(:errors)        { class_call[1] }
 
   context 'when given empty io' do
     let(:io) { StringIO.new('') }
 
-    it 'returnes an empty array' do
-      expect(class_call).to eq([])
+    it 'returns an empty value array' do
+      expect(success_value).to eq([])
+    end
+
+    it 'returns an empty errors array' do
+      expect(errors).to eq([])
     end
   end
 
@@ -20,17 +25,21 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
     let(:ip) { '111.111.111.111' }
     let(:io) { StringIO.new("#{url} #{ip}") }
 
-    it 'returns an array with one element' do
-      expect(class_call).to eq(
+    it 'returns a value array with one element' do
+      expect(success_value).to eq(
         [described_class::UrlViewDetails.new(url: url, total_views: 1, uniq_ips: Set.new([ip]))]
       )
+    end
+
+    it 'returns an empty errors array' do
+      expect(errors).to eq([])
     end
   end
 
   context 'when given lines with two different valid urls' do
     let(:url1) { '/foo/' }
     let(:url2) { '/bar/' }
-    let(:ip) { '111.111.111.111' }
+    let(:ip)   { '111.111.111.111' }
     let(:io) do
       StringIO.new(
         "#{url1} #{ip}\n"\
@@ -39,18 +48,18 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
     end
 
     it 'returns an array with elements for both urls' do
-      expect(class_call.map(&:url)).to match_array([url1, url2])
+      expect(success_value.map(&:url)).to match_array([url1, url2])
     end
 
     it 'total_views is equal to 1 for both of urls' do
       aggregate_failures do
-        expect(class_call.map(&:total_views)).to eq([1, 1])
+        expect(success_value.map(&:total_views)).to eq([1, 1])
       end
     end
 
     it 'uniq_ips size is equal to 1 for both of urls' do
       aggregate_failures do
-        expect(class_call.map { |x| x.uniq_ips.size }).to eq([1, 1])
+        expect(success_value.map { |x| x.uniq_ips.size }).to eq([1, 1])
       end
     end
   end
@@ -66,15 +75,15 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
     end
 
     it 'returnes a one element array' do
-      expect(class_call.size).to eq(1)
+      expect(success_value.size).to eq(1)
     end
 
     it 'total views is 2' do
-      expect(class_call.first.total_views).to eq(2)
+      expect(success_value.first.total_views).to eq(2)
     end
 
     it 'uniq_ips size is 1' do
-      expect(class_call.first.uniq_ips.size).to eq(1)
+      expect(success_value.first.uniq_ips.size).to eq(1)
     end
   end
 end

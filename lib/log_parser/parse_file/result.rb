@@ -5,7 +5,7 @@ module LogParser
     class Result
       attr_reader :result, :errors
 
-      def initialize(result: '', errors: '')
+      def initialize(result: '', errors: [])
         @result = result
         @errors = errors
       end

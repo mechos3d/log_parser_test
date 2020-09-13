@@ -82,7 +82,8 @@ RSpec.describe LogParser::OutputFormatter do
       ]
     end
 
-    it 'returns list sorted by total_views from most page_views to less page views' do
+    it("returns 'total_views' list sorted alphabtically and 'uniq page views'"\
+       ' list sorted by number of only uniq views') do
       expect(class_call).to eq(
         <<~HEREDOC
           --- Most page views: ------------------

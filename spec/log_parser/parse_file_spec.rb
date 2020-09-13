@@ -14,8 +14,8 @@ RSpec.describe LogParser::ParseFile do
       expect(class_call.result).to be_empty
     end
 
-    it 'returns non-empty errors string' do
-      expect(class_call.errors).to eq('An empty file is given')
+    it 'returns non-empty errors array' do
+      expect(class_call.errors).to eq(['No valid pairs of url+ip found'])
     end
   end
 
@@ -26,8 +26,8 @@ RSpec.describe LogParser::ParseFile do
       expect(class_call.result).not_to be_empty
     end
 
-    it 'returns an empty errors string' do
-      expect(class_call.errors).to eq('')
+    it 'returns an empty errors array' do
+      expect(class_call.errors).to eq([])
     end
   end
 end

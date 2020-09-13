@@ -5,15 +5,6 @@ require 'set'
 module LogParser
   class ParseFile
     class CollectRawData
-      # class LineError
-      #   attr_accessor :url, :message
-
-      #   def initialize(url:, message: '')
-      #     @url     = url
-      #     @message = message
-      #   end
-      # end
-
       class UrlViewDetails
         attr_accessor :url, :total_views, :uniq_ips
 
@@ -51,12 +42,12 @@ module LogParser
           result[url].uniq_ips << ip
         end
 
-        result.values
+        [result.values, errors]
       end
 
       private
 
-      attr_reader :io
+      attr_reader :io, :errors
     end
   end
 end

@@ -19,9 +19,7 @@ module LogParser
       return exit_with(invalid_input_error_code) if invalid_input_error_code
 
       result = ParseFile.call(io: File.new(path_to_file))
-
-      stdout.puts(result.result)
-      stderr.puts(result.errors)
+      output_info(result)
 
       result.errors.empty? ? exit_with(0) : exit_with(ERROR_CODES[:parse_errors_present])
     end
@@ -29,6 +27,11 @@ module LogParser
     private
 
     attr_reader :argv, :stdout, :stderr
+
+    def output_info(result)
+      stdout.puts(result.result)
+      stderr.puts(result.errors.join("\n")) unless result.errors.empty?
+    end
 
     def exit_with(code)
       exit(code)

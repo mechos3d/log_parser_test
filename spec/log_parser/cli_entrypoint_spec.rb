@@ -47,7 +47,7 @@ RSpec.describe LogParser::CliEntrypoint do
 
     before do
       allow(::LogParser::ParseFile).to receive(:call) do
-        ::LogParser::ParseFile::Result.new(result: 'result_string', errors: 'errors_string')
+        ::LogParser::ParseFile::Result.new(result: 'result_string', errors: ['errors_string'])
       end
     end
 

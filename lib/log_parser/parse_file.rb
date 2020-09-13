@@ -11,15 +11,12 @@ module LogParser
     end
 
     def call
-      raw_data = CollectRawData.new(io: io).call
+      raw_data, errors = CollectRawData.new(io: io).call
+      return Result.new(errors: ['No valid pairs of url+ip found']) if raw_data.empty?
 
       string = OutputFormatter.call(data: raw_data)
 
-      if raw_data.empty?
-        Result.new(errors: 'An empty file is given')
-      else
-        Result.new(result: string)
-      end
+      Result.new(result: string, errors: errors)
     end
 
     private

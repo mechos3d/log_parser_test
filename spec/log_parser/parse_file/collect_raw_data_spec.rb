@@ -8,6 +8,9 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
   let(:success_value) { class_call[0] }
   let(:errors)        { class_call[1] }
 
+  let(:url) { '/foo/' }
+  let(:ip) { '111.111.111.111' }
+
   context 'when given empty io' do
     let(:io) { StringIO.new('') }
 
@@ -21,8 +24,6 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
   end
 
   context 'when given valid one-line io' do
-    let(:url) { '/foo/' }
-    let(:ip) { '111.111.111.111' }
     let(:io) { StringIO.new("#{url} #{ip}") }
 
     it 'returns a value array with one element' do
@@ -39,7 +40,6 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
   context 'when given lines with two different valid urls' do
     let(:url1) { '/foo/' }
     let(:url2) { '/bar/' }
-    let(:ip)   { '111.111.111.111' }
     let(:io) do
       StringIO.new(
         "#{url1} #{ip}\n"\
@@ -47,7 +47,7 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
       )
     end
 
-    it 'returns an array with elements for both urls' do
+    it 'returns value array with elements for both urls' do
       expect(success_value.map(&:url)).to match_array([url1, url2])
     end
 
@@ -65,8 +65,6 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
   end
 
   context 'when given two lines with the same valid url and same ip-addresses' do
-    let(:url) { '/foo/' }
-    let(:ip) { '111.111.111.111' }
     let(:io) do
       StringIO.new(
         "#{url} #{ip}\n"\
@@ -74,7 +72,7 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
       )
     end
 
-    it 'returnes a one element array' do
+    it 'returns a one element value array' do
       expect(success_value.size).to eq(1)
     end
 
@@ -84,6 +82,60 @@ RSpec.describe LogParser::ParseFile::CollectRawData do
 
     it 'uniq_ips size is 1' do
       expect(success_value.first.uniq_ips.size).to eq(1)
+    end
+  end
+
+  context 'when given a line with only one element in it' do
+    let(:io) { StringIO.new(url.to_s) }
+
+    it 'returns error' do
+      expect(errors).to eq(
+        [::LogParser::ParseFile::LineError.new(index: 0, code: :not_enough_information)]
+      )
+    end
+
+    it 'returns empty value array' do
+      expect(success_value).to eq([])
+    end
+  end
+
+  context 'when given a line with more than two elements' do
+    let(:io) { StringIO.new("#{url} #{ip} foo") }
+
+    it 'returns error' do
+      expect(errors).to eq(
+        [::LogParser::ParseFile::LineError.new(index: 0, code: :extra_information)]
+      )
+    end
+  end
+
+  context 'when given a line with invalid ip-address' do
+    let(:ip) { '999.999.999.999' }
+    let(:io) { StringIO.new("#{url} #{ip}") }
+
+    it 'returns error' do
+      expect(errors).to eq(
+        [::LogParser::ParseFile::LineError.new(index: 0, code: :invalid_ip)]
+      )
+    end
+  end
+
+  context 'when the first line is ok, and second one has an error,' do
+    let(:io) do
+      StringIO.new(
+        "#{url} #{ip}\n"\
+        "#{url}"
+      )
+    end
+
+    it 'returns error with correct line index' do
+      expect(errors).to eq(
+        [::LogParser::ParseFile::LineError.new(index: 1, code: :not_enough_information)]
+      )
+    end
+
+    it 'returns success_value array with one element' do
+      expect(success_value.size).to eq(1)
     end
   end
 end

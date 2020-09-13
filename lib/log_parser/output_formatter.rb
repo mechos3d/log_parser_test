@@ -3,7 +3,7 @@
 module LogParser
   class OutputFormatter
     def self.call(**args)
-      new(args).call
+      new(**args).call
     end
 
     def initialize(data:)

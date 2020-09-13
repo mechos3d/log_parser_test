@@ -41,4 +41,28 @@ RSpec.describe LogParser::CliEntrypoint do
       expect(stderr).to have_received(:puts).with('File does not exist')
     end
   end
+
+  context 'when given valid file path' do
+    let(:argv) { [File.join(__dir__, '..', 'fixtures', 'webserver.log')] }
+
+    before do
+      allow(::LogParser::ParseFile).to receive(:call) do
+        ::LogParser::ParseFile::Result.new(result: 'result_string', errors: 'errors_string')
+      end
+    end
+
+    context 'when FileParse returns success' do
+      it 'returns result to stdout' do
+        class_call
+        expect(stdout).to have_received(:puts).with('result_string')
+      end
+    end
+
+    context 'when FileParse returns failure' do
+      it 'returns error to stderr' do
+        class_call
+        expect(stderr).to have_received(:puts).with('errors_string')
+      end
+    end
+  end
 end

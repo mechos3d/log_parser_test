@@ -11,8 +11,15 @@ module LogParser
     def call
       return 1 if invalid_arguments_number
 
-      file_name = argv.first
-      return 2 if file_doesnt_exist(file_name)
+      path_to_file = argv.first
+      return 2 if file_doesnt_exist(path_to_file)
+
+      result = ParseFile.call(io: File.new(path_to_file))
+
+      stdout.puts(result.result)
+      stderr.puts(result.errors)
+
+      result.errors.empty? ? 0 : 3
     end
 
     private
@@ -31,8 +38,8 @@ module LogParser
       true
     end
 
-    def file_doesnt_exist(file_name)
-      return if File.exist?(file_name)
+    def file_doesnt_exist(path_to_file)
+      return if File.exist?(path_to_file)
 
       stderr.puts('File does not exist')
       true

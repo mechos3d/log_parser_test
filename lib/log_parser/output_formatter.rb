@@ -17,7 +17,6 @@ module LogParser
 
         --- Most unique page views: -----------
         #{most_unique_page_views}
-
       HEREDOC
     end
 

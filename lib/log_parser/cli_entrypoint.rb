@@ -44,9 +44,9 @@ module LogParser
     def invalid_input_error_code
       @invalid_input_error_code ||= begin
         if invalid_arguments_number
-          ERROR_CODES[:invalid_arguments_number]
+          ERROR_CODES.fetch(:invalid_arguments_number)
         elsif file_doesnt_exist(path_to_file)
-          ERROR_CODES[:file_doesnt_exist]
+          ERROR_CODES.fetch(:file_doesnt_exist)
         end
       end
     end

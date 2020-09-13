@@ -20,7 +20,6 @@ RSpec.describe LogParser::OutputFormatter do
 
           --- Most unique page views: -----------
           /abc
-
         HEREDOC
       )
     end
@@ -44,7 +43,6 @@ RSpec.describe LogParser::OutputFormatter do
           --- Most unique page views: -----------
           /abc
           /efg
-
         HEREDOC
       )
     end
@@ -68,7 +66,6 @@ RSpec.describe LogParser::OutputFormatter do
           --- Most unique page views: -----------
           /abc
           /efg
-
         HEREDOC
       )
     end
@@ -93,7 +90,6 @@ RSpec.describe LogParser::OutputFormatter do
           --- Most unique page views: -----------
           /efg
           /abc
-
         HEREDOC
       )
     end

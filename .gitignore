@@ -1,0 +1,14 @@
+/log
+/tmp
+/spec/tmp
+
+.DS_Store
+
+# IDE stuff
+/.idea
+/.vscode
+
+#Ignore vim temporary files
+*.sw*
+*~
+tags

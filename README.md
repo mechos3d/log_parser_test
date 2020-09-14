@@ -38,4 +38,5 @@ cd log_parser
 
 4 Every CLI application should implement a `--help / -h` flag showing it's documentation.
 
-
+5 Log files can be huge. The algorithm needs testing on big files to determine it's memory consumption, performance etc.
+  Also can add some flags to limit number of urls to output.
